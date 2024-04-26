@@ -87,8 +87,8 @@ void AdicionandoActionOrEndpoint(WebApplication app)
 
     #region Lista de Naves
 
-    app.MapGet("/Obter StarShips/", async (MinimalDbContext context) =>
-    await context.StarShips.ToListAsync())
+    app.MapGet("/ObterStarShips/", async (MinimalDbContext context) =>
+     await context.StarShips.ToListAsync())
     .WithName("GetStarShips")
     .WithTags("Starships");
 
