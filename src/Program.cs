@@ -1,4 +1,5 @@
 using MayTheFourth.Api.Data;
+using MayTheFourth.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -83,6 +84,18 @@ void AdicionandoActionOrEndpoint(WebApplication app)
 
     #region  Lista de Veiculos
 
+    app.MapGet("/Vehicles", async (MinimalDbContext context) => // Retornar todos os veiculos
+    await context.Vehicles.ToListAsync())
+        .WithName("GetVehicles")
+        .WithTags("Vehicles");
+
+    app.MapGet("/Vehicles/{id}", async (MinimalDbContext context, Guid id) =>
+    await context.Vehicles.FindAsync(id)
+    is Vehicle veiculo ? Results.Ok(veiculo) : Results.NotFound())
+    .Produces<Vehicle>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status404NotFound)
+    .WithName("GetVehicleById")
+    .WithTags("Vehicles");
     #endregion
 
     #region Lista de Naves
