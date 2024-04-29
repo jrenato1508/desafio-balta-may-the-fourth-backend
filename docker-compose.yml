@@ -1,0 +1,17 @@
+version: '3.8'
+
+networks:
+  network-api:
+    driver: bridge
+
+services:
+  sql_server:
+    image: minimalsqlserver:1.0.0 
+    container_name: DB_SQL_SERVER
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: BneiivxZf28w7seZ#ErFkt@6
+      MSSQL_PID: Evaluation
+    ports:
+      - "1433:1433"
+    hostname: DATABASE_SERVER
