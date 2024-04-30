@@ -113,6 +113,44 @@ void AdicionandoActionOrEndpoint(WebApplication app)
     .WithName("PostVehicle")
     .WithTags("Vehicles");
 
+    app.MapPut("Vehicles/{id}", async (Guid id, MinimalDbContext context, Vehicle veiculo) =>
+    {
+        var vehicleDB = await context.Vehicles.AsNoTracking<Vehicle>().FirstOrDefaultAsync(x => x.Id == id);
+        if (vehicleDB is null)
+            return Results.NotFound();
+
+
+        if (!MiniValidator.TryValidate(veiculo, out var errors))
+            return Results.ValidationProblem(errors);
+
+        context.Vehicles.Update(veiculo);
+
+        var result = await context.SaveChangesAsync();
+
+        return result > 0 ? Results.NoContent() : Results.BadRequest("Houve um problema ao salvar o registro!");
+
+    }).ProducesValidationProblem()
+    .Produces(StatusCodes.Status204NoContent)
+    .Produces(StatusCodes.Status400BadRequest)
+    .WithName("PutVehicle")
+    .WithTags("Vehicles");
+
+    app.MapDelete("/Vehicles/{id}", async (MinimalDbContext context, Guid id) =>
+    {
+        var veiculo = await context.Vehicles.FindAsync(id);
+        if (veiculo is null)
+            return Results.NotFound();
+
+        context.Vehicles.Remove(veiculo);
+        var result = await context.SaveChangesAsync();
+
+        return result > 0 ? Results.NoContent() : Results.BadRequest("Houve um problema ao salvar o registro!");
+    }).Produces(StatusCodes.Status400BadRequest)
+    .Produces(StatusCodes.Status204NoContent)
+    .Produces(StatusCodes.Status404NotFound)
+    .WithName("DeleteVehicle")
+    .WithTags("Vehicles");
+
     #endregion
 
     #region Lista de Naves
