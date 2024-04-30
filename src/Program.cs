@@ -2,6 +2,7 @@ using MayTheFourth.Api.Data;
 using MayTheFourth.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MiniValidation;
 
 
 #region Configure Services
@@ -96,6 +97,22 @@ void AdicionandoActionOrEndpoint(WebApplication app)
     .Produces(StatusCodes.Status404NotFound)
     .WithName("GetVehicleById")
     .WithTags("Vehicles");
+
+    app.MapPost("/Vehicles", async (MinimalDbContext context, Vehicle veiculo) =>
+    {
+        if (!MiniValidator.TryValidate(veiculo, out var errors))
+            return Results.ValidationProblem(errors);
+
+        context.Add(veiculo);
+        var result = await context.SaveChangesAsync();
+        return result > 0 ? Results.CreatedAtRoute("GetVehicleById", new { id = veiculo.Id }, veiculo) : Results.BadRequest("Houve um problema ao salvar o registro!");
+
+    }).ProducesValidationProblem()
+    .Produces<Vehicle>(StatusCodes.Status201Created)
+    .Produces(StatusCodes.Status400BadRequest)
+    .WithName("PostVehicle")
+    .WithTags("Vehicles");
+
     #endregion
 
     #region Lista de Naves
