@@ -1,4 +1,5 @@
 using MayTheFourth.Api.Data;
+using MayTheFourth.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -69,8 +70,18 @@ app.Run();
 #region Actions/EndPoints
 void AdicionandoActionOrEndpoint(WebApplication app)
 {
-    #region Lista de Filmes
+    #region Lista de Especies
+    app.MapGet("/ObterEspecies/", async (MinimalDbContext context) =>
+    await context.Species.ToListAsync())
+    .WithName("Getspecies")
+    .WithTags("Species");
+    #endregion
 
+    #region Lista de Filmes
+    app.MapGet("/ObterFilms/", async (MinimalDbContext context) =>
+    await context.Films.ToListAsync())
+    .WithName("GetFilms")
+    .WithTags("Films");
     #endregion
 
     #region Lista de Personagens
@@ -81,11 +92,10 @@ void AdicionandoActionOrEndpoint(WebApplication app)
     #endregion
 
     #region Lista de Planetas
-
-    #endregion
-
-    #region  Lista de Veiculos
-
+    app.MapGet("/ObterPlanetas/", async  (MinimalDbContext context) =>
+    await context.planet.ToListAsync())
+    .WithName("GetPlanetas")
+    .WithTags("Planets");
     #endregion
 
     #region Lista de Naves
@@ -97,6 +107,14 @@ void AdicionandoActionOrEndpoint(WebApplication app)
 
     // testar a chamada
     #endregion
+
+    #region  Lista de Veiculos
+    app.MapGet("/ObterVeiculos/", async (MinimalDbContext context) =>
+    await context.Vehicles.ToListAsync())
+    .WithName("GetVehichles")
+    .WithTags("Vehichles");
+    #endregion
+
 }
 #endregion
 
