@@ -74,7 +74,10 @@ void AdicionandoActionOrEndpoint(WebApplication app)
     #endregion
 
     #region Lista de Personagens
-
+    app.MapGet("/ObterPersonagens/", async (MinimalDbContext context) =>
+    await context.Peoples.ToListAsync())
+    .WithName("GetPersonagens")
+    .WithTags("Peoples");
     #endregion
 
     #region Lista de Planetas

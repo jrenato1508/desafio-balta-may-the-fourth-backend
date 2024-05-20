@@ -22,11 +22,6 @@
         public string? url { get; set; }
 
 
-        // continuar com a ideia de separar os conteudos por virgular e montar uma lista
-        public IEnumerable<string> ListaFilms()
-        {
-            var FilmeListado = films.Split(',');
-            return FilmeListado;
-        }
+       
     }
 }
